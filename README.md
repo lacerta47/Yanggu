@@ -3,6 +3,6 @@
 이 프로젝트는 양구 학생들이 바이브코딩 프로젝트를 통해
 Gemini-CLI로 작업한 HTML/CSS/JS 프로젝트를 모아 보여주는 웹사이트입니다.
 
-GitHub Pages를 통해 완성된 작품을 확인할 수 있습니다.
+[GitHub Pages](https://lacerta47.github.io/Yanggu/)를 통해 완성된 작품을 확인할 수 있습니다.
 
 궁금한 점이 있다면 언제든지 문의해주세요.
