@@ -1,0 +1,16 @@
+<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+      <feOffset dx="1" dy="1" result="offsetblur" />
+      <feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer>
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+  <!-- Ribbon Left -->
+  <path d="M200,85 L140,55 Q120,55 120,85 Q120,115 140,115 Z" fill="#ff5252" stroke="#d32f2f" stroke-width="2" filter="url(#shadow)"/>
+  <!-- Ribbon Right -->
+  <path d="M200,85 L260,55 Q280,55 280,85 Q280,115 260,115 Z" fill="#ff5252" stroke="#d32f2f" stroke-width="2" filter="url(#shadow)"/>
+  <!-- Ribbon Center -->
+  <circle cx="200" cy="85" r="10" fill="#ff5252" stroke="#d32f2f" stroke-width="2"/>
+</svg>

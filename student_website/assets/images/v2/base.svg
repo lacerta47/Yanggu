@@ -1,0 +1,52 @@
+<svg viewBox="0 0 500 650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 포근한 갈색 털 질감 그라데이션 -->
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#b08d6d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8d6e50;stop-opacity:1" />
+    </linearGradient>
+    <filter id="handDrawn" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
+    </filter>
+  </defs>
+
+  <!-- 발 (안정적인 자세) -->
+  <path d="M150,550 Q130,620 180,620 L210,620 Q230,550 210,550 Z" fill="#8d6e50" stroke="#5d4037" stroke-width="4" filter="url(#handDrawn)"/>
+  <path d="M350,550 Q370,620 320,620 L290,620 Q270,550 290,550 Z" fill="#8d6e50" stroke="#5d4037" stroke-width="4" filter="url(#handDrawn)"/>
+
+  <!-- 다리 -->
+  <path d="M160,450 Q150,550 180,550 L210,550 Q230,450 220,450 Z" fill="url(#furGrad)" stroke="#5d4037" stroke-width="4" filter="url(#handDrawn)"/>
+  <path d="M340,450 Q350,550 320,550 L290,550 Q270,450 280,450 Z" fill="url(#furGrad)" stroke="#5d4037" stroke-width="4" filter="url(#handDrawn)"/>
+
+  <!-- 팔 (A-자세, 옷 입히기 최적화) -->
+  <path d="M140,280 Q80,320 100,450" fill="none" stroke="#5d4037" stroke-width="46" stroke-linecap="round" filter="url(#handDrawn)"/>
+  <path d="M140,280 Q80,320 100,450" fill="#b08d6d" stroke="none" stroke-width="38" stroke-linecap="round" filter="url(#handDrawn)"/>
+  
+  <path d="M360,280 Q420,320 400,450" fill="none" stroke="#5d4037" stroke-width="46" stroke-linecap="round" filter="url(#handDrawn)"/>
+  <path d="M360,280 Q420,320 400,450" fill="#b08d6d" stroke="none" stroke-width="38" stroke-linecap="round" filter="url(#handDrawn)"/>
+
+  <!-- 몸통 (통통한 배) -->
+  <path d="M140,280 Q120,480 250,480 Q380,480 360,280 Z" fill="url(#furGrad)" stroke="#5d4037" stroke-width="5" filter="url(#handDrawn)"/>
+  <path d="M180,320 Q170,440 250,440 Q330,440 320,320 Z" fill="#e9dcc9" opacity="0.6" filter="url(#handDrawn)"/> <!-- 밝은 배 부분 -->
+
+  <!-- 머리 (통통한 볼) -->
+  <path d="M120,150 Q120,40 250,40 Q380,40 380,150 Q380,260 250,260 Q120,260 120,150 Z" fill="url(#furGrad)" stroke="#5d4037" stroke-width="5" filter="url(#handDrawn)"/>
+
+  <!-- 귀 -->
+  <circle cx="150" cy="80" r="45" fill="#8d6e50" stroke="#5d4037" stroke-width="4" filter="url(#handDrawn)"/>
+  <circle cx="350" cy="80" r="45" fill="#8d6e50" stroke="#5d4037" stroke-width="4" filter="url(#handDrawn)"/>
+  <circle cx="150" cy="80" r="22" fill="#e9dcc9" filter="url(#handDrawn)"/>
+  <circle cx="350" cy="80" r="22" fill="#e9dcc9" filter="url(#handDrawn)"/>
+
+  <!-- 얼굴 -->
+  <circle cx="210" cy="150" r="10" fill="#3e2723"/> <!-- 눈 -->
+  <circle cx="290" cy="150" r="10" fill="#3e2723"/> <!-- 눈 -->
+  <ellipse cx="250" cy="210" rx="45" ry="35" fill="#f5ebe0" filter="url(#handDrawn)"/> <!-- 주둥이 -->
+  <path d="M235,200 Q250,185 265,200 L250,215 Z" fill="#3e2723"/> <!-- 코 -->
+  <path d="M230,230 Q250,245 270,230" fill="none" stroke="#3e2723" stroke-width="3" stroke-linecap="round"/> <!-- 입 -->
+
+  <!-- 발그레 -->
+  <circle cx="170" cy="200" r="18" fill="#ffccd5" opacity="0.5"/>
+  <circle cx="330" cy="200" r="18" fill="#ffccd5" opacity="0.5"/>
+</svg>

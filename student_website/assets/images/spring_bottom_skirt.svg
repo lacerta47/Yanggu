@@ -1,0 +1,18 @@
+<svg viewBox="0 0 400 550" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="clothShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+      <feOffset dx="1" dy="1" result="offsetblur" />
+      <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+  <!-- 치마 (곰돌이 하반신 M130,240 Q130,440 200,440 Q270,440 270,240 Z 에 맞춤) -->
+  <path d="M120,340 Q200,325 280,340 L330,480 Q200,510 70,480 Z" fill="#f8bbd0" stroke="#c2185b" stroke-width="2.5" filter="url(#clothShadow)"/>
+  
+  <!-- 레이어 디테일 -->
+  <path d="M100,400 Q200,385 300,400 L320,470 Q200,500 80,470 Z" fill="#fce4ec" stroke="#c2185b" stroke-width="1" opacity="0.8"/>
+  
+  <!-- 주름선 -->
+  <path d="M140,340 L120,480 M170,335 L160,490 M230,335 L240,490 M260,340 L280,480" stroke="#c2185b" stroke-width="1.5" opacity="0.4"/>
+</svg>

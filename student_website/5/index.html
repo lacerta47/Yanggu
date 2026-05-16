@@ -2,57 +2,85 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아직 준비 중인 프로젝트입니다</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-        .message-box {
-            max-width: 500px;
-            padding: 2rem;
-        }
-        h1 {
-            font-size: 2.5rem;
-            color: #e74c3c;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        a {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #3498db;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.2s, background-color 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        a:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>동물어장관리 v18</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="message-box">
-        <h1>준비 중인 작품</h1>
-        <p>이 번호의 프로젝트는 아직 준비 중입니다.<br>조금만 더 기다려 주세요!</p>
-        <a href="../index.html">메인 페이지로 돌아가기</a>
+    <div id="game-wrapper">
+        <div id="map-area">
+            <div id="map" class="bg-common">
+                <div id="player">
+                    <svg viewBox="0 0 16 16" width="60" height="60">
+                        <rect x="6" y="1" width="4" height="4" fill="#ffff00"/>
+                        <rect x="7" y="2" width="0.5" height="1" fill="#000"/>
+                        <rect x="8.5" y="2" width="0.5" height="1" fill="#000"/>
+                        <rect x="7" y="4" width="2" height="0.5" fill="#000"/>
+                        <rect x="6" y="5" width="4" height="6" fill="#0000ff"/>
+                        <rect class="arm-l" x="3" y="5" width="3" height="2" fill="#ffff00"/>
+                        <rect class="arm-r" x="10" y="5" width="3" height="2" fill="#ffff00"/>
+                        <rect class="leg-l" x="6" y="11" width="2" height="5" fill="#00ff00"/>
+                        <rect class="leg-r" x="8" y="11" width="2" height="5" fill="#00ff00"/>
+                    </svg>
+                </div>
+                <div id="objects"></div>
+                <div id="chaser" style="display: none;">
+                    <svg viewBox="0 0 16 16" width="80" height="80">
+                        <rect x="4" y="4" width="8" height="8" fill="#ff0000" rx="2"/>
+                        <circle cx="8" cy="8" r="2" fill="#fff">
+                            <animate attributeName="r" values="1.5;2.5;1.5" dur="0.8s" repeatCount="indefinite" />
+                            <animate attributeName="fill" values="#fff;#ffaaaa;#fff" dur="0.8s" repeatCount="indefinite" />
+                        </circle>
+                        <path class="tentacle-svg" d="M4 6 Q 0 4, 1 10" stroke="#8b0000" stroke-width="1.5" fill="none" />
+                        <path class="tentacle-svg" d="M12 6 Q 16 4, 15 10" stroke="#8b0000" stroke-width="1.5" fill="none" />
+                    </svg>
+                </div>
+            </div>
+            <div class="interact-prompt">조사 (Space)</div>
+            <div id="jumpscare-overlay">
+                <div class="tentacle-js t-left"></div>
+                <div class="tentacle-js t-right"></div>
+                <div class="split-animation-container">
+                    <div class="player-half l-half">
+                        <svg viewBox="0 0 8 16" width="100" height="200">
+                            <rect x="6" y="1" width="2" height="4" fill="#ffff00"/><rect x="7" y="2" width="0.5" height="1" fill="#000"/><rect x="7" y="4" width="1" height="0.5" fill="#000"/><rect x="6" y="5" width="2" height="6" fill="#0000ff"/><rect x="3" y="5" width="3" height="2" fill="#ffff00"/><rect x="6" y="11" width="2" height="5" fill="#00ff00"/>
+                        </svg>
+                    </div>
+                    <div class="player-half r-half">
+                        <svg viewBox="8 0 8 16" width="100" height="200">
+                            <rect x="8" y="1" width="2" height="4" fill="#ffff00"/><rect x="8.5" y="2" width="0.5" height="1" fill="#000"/><rect x="8" y="4" width="1" height="0.5" fill="#000"/><rect x="8" y="5" width="2" height="6" fill="#0000ff"/><rect x="10" y="5" width="3" height="2" fill="#ffff00"/><rect x="8" y="11" width="2" height="5" fill="#00ff00"/>
+                        </svg>
+                    </div>
+                    <div class="blood-drip"></div>
+                    <div class="blood-drip" style="left: 45%; animation-delay: 0.2s;"></div>
+                    <div class="blood-drip" style="left: 55%; animation-delay: 0.4s;"></div>
+                </div>
+                <div class="gentla-light-js"></div>
+            </div>
+            <div id="stage-transition"></div>
+        </div>
+        <div id="ui-area">
+            <div id="status-line">로딩 중...</div>
+            <div id="dialog-box">수칙을 확인하고, 획득한 아이템을 전략적으로 사용하십시오.</div>
+        </div>
+        <div id="mobile-controls">
+            <div class="d-pad">
+                <div></div><div class="ctrl-btn" ontouchstart="move('w')" ontouchend="move('stop')">↑</div><div></div>
+                <div class="ctrl-btn" ontouchstart="move('a')" ontouchend="move('stop')">←</div><div class="ctrl-btn" ontouchstart="handleInteraction()">O</div><div class="ctrl-btn" ontouchstart="move('d')" ontouchend="move('stop')">→</div>
+                <div></div><div class="ctrl-btn" ontouchstart="move('s')" ontouchend="move('stop')">↓</div><div></div>
+            </div>
+            <div class="action-btns">
+                <div class="ctrl-btn" style="border-radius: 10px;" ontouchstart="toggleInventory()">E</div>
+                <div class="ctrl-btn" style="border-radius: 10px;" ontouchstart="useSelectedItem()">Z</div>
+            </div>
+        </div>
+        <div id="modal-overlay">
+            <div id="modal-content">
+                <div id="modal-text"></div>
+                <div id="modal-hint">(배경을 클릭하거나 아무 키나 눌러 닫기)</div>
+            </div>
+        </div>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>

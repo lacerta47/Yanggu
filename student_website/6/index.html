@@ -3,56 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아직 준비 중인 프로젝트입니다</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-        .message-box {
-            max-width: 500px;
-            padding: 2rem;
-        }
-        h1 {
-            font-size: 2.5rem;
-            color: #e74c3c;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        a {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #3498db;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.2s, background-color 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        a:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-    </style>
+    <title>RPG - 모험의 시작</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="message-box">
-        <h1>준비 중인 작품</h1>
-        <p>이 번호의 프로젝트는 아직 준비 중입니다.<br>조금만 더 기다려 주세요!</p>
-        <a href="../index.html">메인 페이지로 돌아가기</a>
+    <div id="game-container">
+        <!-- 메인 화면 -->
+        <div id="main-screen" class="screen">
+            <h1>RPG</h1>
+            <button id="start-btn">모험 시작</button>
+        </div>
+
+        <!-- 캐릭터 생성 화면 -->
+        <div id="creation-screen" class="screen hidden">
+            <h2>캐릭터 생성</h2>
+            <div id="race-selection">
+                <p>당신의 종족은...?</p>
+                <button id="roll-race-btn">종족 뽑기</button>
+                <div id="race-result"></div>
+            </div>
+            <div id="stat-allocation" class="hidden">
+                <p>남은 포인트: <span id="stat-points-init">10</span></p>
+                <div class="stat-row">
+                    <span>힘 (Str)</span>
+                    <button class="stat-minus-init" data-stat="str">-</button>
+                    <span id="stat-str-init">0</span>
+                    <button class="stat-plus-init" data-stat="str">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>지능 (Int)</span>
+                    <button class="stat-minus-init" data-stat="int">-</button>
+                    <span id="stat-int-init">0</span>
+                    <button class="stat-plus-init" data-stat="int">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>민첩 (Agi)</span>
+                    <button class="stat-minus-init" data-stat="agi">-</button>
+                    <span id="stat-agi-init">0</span>
+                    <button class="stat-plus-init" data-stat="agi">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>체력 (Con)</span>
+                    <button class="stat-minus-init" data-stat="con">-</button>
+                    <span id="stat-con-init">0</span>
+                    <button class="stat-plus-init" data-stat="con">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>마력 (Mag)</span>
+                    <button class="stat-minus-init" data-stat="mag">-</button>
+                    <span id="stat-mag-init">0</span>
+                    <button class="stat-plus-init" data-stat="mag">+</button>
+                </div>
+                <button id="complete-creation-btn" disabled>모험 떠나기</button>
+            </div>
+        </div>
+
+        <!-- 게임 화면 -->
+        <div id="game-screen" class="screen hidden">
+            <canvas id="game-canvas"></canvas>
+            <div id="ui-overlay">
+                <div id="player-info-top">
+                    <div id="player-stats-ui">
+                        Lv.<span id="ui-level">1</span> | 
+                        HP: <span id="ui-hp">100</span>/<span id="ui-max-hp">100</span> | 
+                        MP: <span id="ui-mp">50</span>/<span id="ui-max-mp">50</span>
+                        <div id="exp-bar-container"><div id="exp-bar"></div></div>
+                    </div>
+                    <div id="quest-log">
+                        <p>퀘스트: <span id="ui-quest">없음</span></p>
+                    </div>
+                </div>
+
+                <!-- 실시간 스탯 투자창 (추가) -->
+                <div id="stat-window">
+                    <h3>내 정보 (P)</h3>
+                    <p>포인트: <span id="ui-stat-points">0</span></p>
+                    <div class="ui-stat-row">Str: <span id="ui-stat-str">0</span> <button class="ui-stat-plus" data-stat="str">+</button></div>
+                    <div class="ui-stat-row">Int: <span id="ui-stat-int">0</span> <button class="ui-stat-plus" data-stat="int">+</button></div>
+                    <div class="ui-stat-row">Agi: <span id="ui-stat-agi">0</span> <button class="ui-stat-plus" data-stat="agi">+</button></div>
+                    <div class="ui-stat-row">Con: <span id="ui-stat-con">0</span> <button class="ui-stat-plus" data-stat="con">+</button></div>
+                    <div class="ui-stat-row">Mag: <span id="ui-stat-mag">0</span> <button class="ui-stat-plus" data-stat="mag">+</button></div>
+                    
+                    <!-- 패시브 스킬 영역 추가 -->
+                    <div id="passive-list">
+                        <h4>패시브 스킬</h4>
+                        <div id="passives-container">
+                            <!-- 활성화된 패시브가 여기 표시됨 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 스킬창 -->
+                <div id="skill-window">
+                    <h3>보유 스킬 (S)</h3>
+                    <div id="skill-list">
+                        <!-- 스킬 아이템들이 여기 들어감 -->
+                    </div>
+                </div>
+
+                <div id="controls-hint">
+                    방향키: 이동 | W: 공격 | A: 대쉬 | S: 스킬 | Space: 대화 | P: 스탯창 ON/OFF
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>

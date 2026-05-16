@@ -1,0 +1,198 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: white;
+    font-family: 'Malgun Gothic', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 1200px;
+    max-height: 800px;
+    background-color: #000;
+    border: 4px solid #444;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    background-color: #444;
+    color: white;
+    border: 2px solid #666;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+button:hover:not(:disabled) {
+    background-color: #666;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 스탯 및 UI 공통 스타일 */
+.stat-row, .ui-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.3rem 0;
+}
+
+.stat-row span, .ui-stat-row {
+    font-size: 1.1rem;
+}
+
+/* 게임 화면 UI */
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    pointer-events: none;
+}
+
+#player-info-top {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#player-stats-ui, #quest-log, #stat-window, #skill-window, #controls-hint {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #555;
+    pointer-events: auto;
+}
+
+#exp-bar-container {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+#exp-bar {
+    width: 0%;
+    height: 100%;
+    background: #ffeb3b;
+    transition: width 0.3s;
+}
+
+#stat-window {
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    width: 180px;
+}
+
+#skill-window {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    width: 220px;
+}
+
+.ui-stat-plus {
+    padding: 0.1rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.skill-item {
+    padding: 0.4rem;
+    margin-top: 0.4rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.skill-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.selected-skill {
+    border: 1px solid #ffeb3b;
+    background: rgba(255, 235, 59, 0.2);
+}
+
+#controls-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: #ccc;
+    pointer-events: none;
+}
+
+#passive-list {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #444;
+}
+
+#passive-list h4 {
+    font-size: 0.9rem;
+    color: #ffeb3b;
+    margin-bottom: 0.3rem;
+}
+
+.passive-item {
+    font-size: 0.8rem;
+    color: #00e676;
+    background: rgba(0, 230, 118, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    margin-bottom: 0.2rem;
+    border: 1px solid rgba(0, 230, 118, 0.3);
+}
+
+#game-canvas {
+    width: 100%;
+    height: 100%;
+}

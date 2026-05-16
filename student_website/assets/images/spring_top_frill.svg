@@ -1,0 +1,28 @@
+<svg viewBox="0 0 400 550" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="clothShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+      <feOffset dx="1" dy="1" result="offsetblur" />
+      <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+  <!-- 몸판 (곰돌이 몸통 좌표 M130,240 Q130,440 200,440 Q270,440 270,240 Z 에 맞춤) -->
+  <path d="M125,240 Q125,410 200,410 Q275,410 275,240 Z" fill="#ffffff" stroke="#ff80ab" stroke-width="3" filter="url(#clothShadow)"/>
+  
+  <!-- 소매 (곰돌이 팔 좌표 translate(130, 260) rotate(25) / translate(270, 260) rotate(-25) 에 맞춤) -->
+  <g transform="translate(130, 260) rotate(25)">
+    <rect x="-22" y="-5" width="44" height="60" rx="10" fill="#ffffff" stroke="#ff80ab" stroke-width="2"/>
+    <path d="M-22,50 Q0,60 22,50" fill="none" stroke="#ff80ab" stroke-width="1.5"/> <!-- 프릴 -->
+  </g>
+  <g transform="translate(270, 260) rotate(-25)">
+    <rect x="-22" y="-5" width="44" height="60" rx="10" fill="#ffffff" stroke="#ff80ab" stroke-width="2"/>
+    <path d="M-22,50 Q0,60 22,50" fill="none" stroke="#ff80ab" stroke-width="1.5"/> <!-- 프릴 -->
+  </g>
+
+  <!-- 프릴 및 단추 디테일 -->
+  <path d="M130,250 Q200,240 270,250" fill="none" stroke="#ff80ab" stroke-width="2" opacity="0.5"/>
+  <circle cx="200" cy="280" r="4" fill="#ff80ab"/>
+  <circle cx="200" cy="320" r="4" fill="#ff80ab"/>
+  <circle cx="200" cy="360" r="4" fill="#ff80ab"/>
+</svg>

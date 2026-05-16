@@ -3,56 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아직 준비 중인 프로젝트입니다</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-        .message-box {
-            max-width: 500px;
-            padding: 2rem;
-        }
-        h1 {
-            font-size: 2.5rem;
-            color: #e74c3c;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        a {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #3498db;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.2s, background-color 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        a:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-    </style>
+    <title>폭신폭신 곰인형 옷 입히기 v1</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="message-box">
-        <h1>준비 중인 작품</h1>
-        <p>이 번호의 프로젝트는 아직 준비 중입니다.<br>조금만 더 기다려 주세요!</p>
-        <a href="../index.html">메인 페이지로 돌아가기</a>
+    <div id="game-app">
+        <!-- 시작 화면 -->
+        <section id="start-screen" class="screen">
+            <div class="intro-box">
+                <img src="../assets/images/bear_base.svg" alt="곰돌이" class="intro-bear">
+                <h1 class="game-title">폭신폭신 곰인형<br>코디 놀이</h1>
+                <button id="start-btn" class="cute-btn">놀기 시작!</button>
+            </div>
+        </section>
+
+        <!-- 옷 입히기 화면 -->
+        <section id="play-screen" class="screen hidden">
+            <div class="game-container">
+                <!-- 왼쪽: 곰돌이 전시 구역 -->
+                <div class="character-zone">
+                    <div class="scene-bg"></div>
+                    <div class="bear-frame">
+                        <img src="../assets/images/bear_base.svg" class="base-image" alt="곰돌이 몸통">
+                        <div id="equipped-layer">
+                            <img id="layer-bottom" class="cloth-layer" src="" alt="">
+                            <img id="layer-onepiece" class="cloth-layer" src="" alt="">
+                            <img id="layer-top" class="cloth-layer" src="" alt="">
+                            <img id="layer-accessory" class="cloth-layer" src="" alt="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 오른쪽: 옷장 구역 -->
+                <div class="wardrobe-zone">
+                    <div class="category-tabs">
+                        <button class="cat-tab active" data-category="top">상의</button>
+                        <button class="cat-tab" data-category="bottom">하의</button>
+                        <button class="cat-tab" data-category="onepiece">한벌옷</button>
+                        <button class="cat-tab" data-category="accessory">소품</button>
+                    </div>
+                    <div id="item-shelf" class="item-shelf">
+                        <!-- 아이템들이 여기에 나타나요 -->
+                    </div>
+                    <div class="bottom-nav">
+                        <button id="finish-btn" class="cute-btn small">다 입혔어요!</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 결과 화면 -->
+        <section id="result-screen" class="screen hidden">
+            <div class="result-box">
+                <div class="bubble">와! 너무 폭신하고 예뻐요! ❤️</div>
+                <div id="final-bear-container" class="bear-frame final"></div>
+                <div class="btn-group">
+                    <button id="retry-btn" class="cute-btn secondary">다시 하기</button>
+                    <button id="reset-btn" class="cute-btn">처음으로</button>
+                </div>
+            </div>
+        </section>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>

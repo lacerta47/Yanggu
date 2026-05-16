@@ -1,0 +1,50 @@
+<svg viewBox="0 0 400 550" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 고급스러운 그라데이션과 그림자 -->
+    <linearGradient id="bearBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3e2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5d0a9;stop-opacity:1" />
+    </linearGradient>
+    <filter id="softDropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+      <feOffset dx="2" dy="2" result="offsetblur" />
+      <feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer>
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <!-- 다리 (몸통 아래에 위치) -->
+  <rect x="145" y="420" width="45" height="80" rx="22" fill="#f5d0a9" stroke="#9e7e5d" stroke-width="3" />
+  <rect x="210" y="420" width="45" height="80" rx="22" fill="#f5d0a9" stroke="#9e7e5d" stroke-width="3" />
+  
+  <!-- 팔 (A-자세, 옷 입히기 최적화) -->
+  <g transform="translate(130, 260) rotate(25)">
+    <rect x="-20" y="0" width="40" height="110" rx="20" fill="#f5d0a9" stroke="#9e7e5d" stroke-width="3" />
+  </g>
+  <g transform="translate(270, 260) rotate(-25)">
+    <rect x="-20" y="0" width="40" height="110" rx="20" fill="#f5d0a9" stroke="#9e7e5d" stroke-width="3" />
+  </g>
+
+  <!-- 몸통 (둥글고 귀여운 배) -->
+  <path d="M130,240 Q130,440 200,440 Q270,440 270,240 Z" fill="url(#bearBody)" stroke="#9e7e5d" stroke-width="4" filter="url(#softDropShadow)"/>
+
+  <!-- 머리 (크고 동글동글함, 목 경계 확실) -->
+  <path d="M110,130 Q110,40 200,40 Q290,40 290,130 Q290,220 200,220 Q110,220 110,130 Z" fill="url(#bearBody)" stroke="#9e7e5d" stroke-width="4" filter="url(#softDropShadow)"/>
+
+  <!-- 귀 -->
+  <circle cx="135" cy="80" r="35" fill="#f5d0a9" stroke="#9e7e5d" stroke-width="3" />
+  <circle cx="265" cy="80" r="35" fill="#f5d0a9" stroke="#9e7e5d" stroke-width="3" />
+  <circle cx="135" cy="80" r="18" fill="#ffffff" opacity="0.5" />
+  <circle cx="265" cy="80" r="18" fill="#ffffff" opacity="0.5" />
+
+  <!-- 얼굴 (깜찍함) -->
+  <circle cx="170" cy="140" r="8" fill="#333" />
+  <circle cx="230" cy="140" r="8" fill="#333" />
+  <ellipse cx="200" cy="180" rx="35" ry="25" fill="#fff" opacity="0.8" />
+  <path d="M190,175 Q200,165 210,175 L200,185 Z" fill="#333" />
+  <path d="M190,195 Q200,205 210,195" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" />
+  
+  <!-- 볼터치 -->
+  <circle cx="145" cy="175" r="12" fill="#ffccd5" opacity="0.7" />
+  <circle cx="255" cy="175" r="12" fill="#ffccd5" opacity="0.7" />
+</svg>
