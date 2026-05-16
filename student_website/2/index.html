@@ -2,57 +2,320 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아직 준비 중인 프로젝트입니다</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>울트라 슈팅 게임 - 리얼 파워 에디션</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-        .message-box {
-            max-width: 500px;
-            padding: 2rem;
-        }
-        h1 {
-            font-size: 2.5rem;
-            color: #e74c3c;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        a {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #3498db;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.2s, background-color 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        a:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
+        :root { --primary: #e74c3c; --secondary: #2c3e50; --accent: #f1c40f; --text: #ecf0f1; --skill: #3498db; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Malgun Gothic', sans-serif; color: var(--text); user-select: none; }
+        
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); }
+        .screen { display: none; text-align: center; width: 90%; max-width: 1000px; }
+        .screen.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        h1 { font-size: 4rem; color: var(--primary); text-shadow: 0 0 20px var(--primary); margin-bottom: 20px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 15px 40px; font-size: 1.5rem; cursor: pointer; border-radius: 10px; margin: 10px; transition: 0.3s; box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4); }
+        .btn:hover { transform: scale(1.05); background: #c0392b; }
+        
+        .grid { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .card { background: rgba(52, 73, 94, 0.7); padding: 15px; border-radius: 15px; cursor: pointer; width: 140px; transition: 0.3s; border: 2px solid transparent; overflow: hidden; }
+        .card:hover { border-color: var(--accent); transform: translateY(-10px); background: rgba(61, 86, 110, 0.9); }
+        .card img { width: 100%; height: 80px; border-radius: 10px; object-fit: cover; margin-bottom: 10px; }
+        .card h3 { margin: 0; font-size: 1.1rem; }
+        
+        #game-container { position: relative; width: 100%; height: 100%; display: none; overflow: hidden; }
+        #background-layer { position: absolute; top: -10%; left: -10%; width: 120%; height: 120%; background-size: cover; background-position: center; z-index: 1; }
+        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 2; }
+        canvas { width: 100%; height: 100%; display: block; position: relative; z-index: 3; }
+        #crosshair { position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 2px solid rgba(0, 255, 0, 0.8); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10; }
+        
+        .game-info { position: absolute; top: 20px; left: 20px; font-size: 1.1rem; background: rgba(0,0,0,0.7); padding: 15px 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 8px; z-index: 20; }
+        .bar-container { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+        .hp-bar-bg { width: 150px; height: 10px; background: #222; border-radius: 5px; overflow: hidden; }
+        .hp-bar-fill { height: 100%; transition: 0.2s; }
+        #p-hp-fill { background: #2ecc71; }
+        #e-hp-fill { background: #e74c3c; }
+        #skill-bar-fill { background: var(--skill); width: 0%; box-shadow: 0 0 10px var(--skill); }
+        
+        #round-info { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; text-align: right; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 15px; z-index: 20; border: 1px solid var(--accent); }
+        #cur-difficulty { font-size: 1rem; color: #fff; display: block; margin-top: 5px; }
+
+        #slow-msg, #skill-msg, #round-msg { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; font-weight: bold; text-shadow: 0 0 30px #000; display: none; z-index: 20; pointer-events: none; }
+        #round-msg { color: var(--accent); animation: zoomIn 1s; text-align: center; }
+        @keyframes zoomIn { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1.1); } }
+
+        #weapon-view { position: absolute; bottom: -20px; right: 10%; width: 400px; height: 300px; z-index: 5; pointer-events: none; }
+        .weapon-part { position: absolute; background: #1a1a1a; border: 2px solid #333; }
+        #barrel { width: 60px; height: 200px; bottom: 50px; left: 170px; border-radius: 5px 5px 0 0; }
+        #body { width: 120px; height: 120px; bottom: 0; left: 140px; border-radius: 10px; }
+        
+        #result-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; background: rgba(0,0,0,0.9); animation: fadeIn 0.8s; }
+        #result-msg { font-size: 5rem; font-weight: bold; margin-bottom: 30px; text-align: center; line-height: 1.2; }
+        .controls-hint { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; color: #aaa; z-index: 20; }
     </style>
 </head>
 <body>
-    <div class="message-box">
-        <h1>준비 중인 작품</h1>
-        <p>이 번호의 프로젝트는 아직 준비 중입니다.<br>조금만 더 기다려 주세요!</p>
-        <a href="../index.html">메인 페이지로 돌아가기</a>
+
+<div id="ui-layer">
+    <div id="start-screen" class="screen active">
+        <h1>ULTRA CAMPAIGN</h1>
+        <button class="btn" onclick="showScreen('map-screen')">캠페인 시작</button>
     </div>
+    
+    <div id="map-screen" class="screen">
+        <h2>전장을 선택하십시오</h2>
+        <div class="grid">
+            <div class="card" onclick="selectMap('도시', 'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?q=80&w=1000')"><img src="https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?q=80&w=200"><h3>황혼의 도시</h3></div>
+            <div class="card" onclick="selectMap('심해', 'https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=1000')"><img src="https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=200"><h3>심해 기지</h3></div>
+            <div class="card" onclick="selectMap('우주', 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1000')"><img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=200"><h3>오리온 성운</h3></div>
+            <div class="card" onclick="selectMap('사막', 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1000')"><img src="https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=200"><h3>타오르는 사막</h3></div>
+            <div class="card" onclick="selectMap('사이버', 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?q=80&w=1000')"><img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?q=80&w=200"><h3>사이버 시티</h3></div>
+            <div class="card" onclick="selectMap('설원', 'https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?q=80&w=1000')"><img src="https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?q=80&w=200"><h3>시베리아 설원</h3></div>
+        </div>
+    </div>
+
+    <div id="weapon-screen" class="screen">
+        <h2>무기를 선택하십시오</h2>
+        <div class="grid">
+            <div class="card" onclick="startWithWeapon('Glock', 45)"><h3>글록 17</h3><p>무한 탄창</p></div>
+            <div class="card" onclick="startWithWeapon('AK47', 75)"><h3>AK-47</h3><p>무한 탄창</p></div>
+            <div class="card" onclick="startWithWeapon('M870', 180)"><h3>M870 샷건</h3><p>무한 탄창</p></div>
+            <div class="card" onclick="startWithWeapon('M249', 60)"><h3>M249 LMG</h3><p>무한 탄창</p></div>
+            <div class="card" onclick="startWithWeapon('Barrett', 450)"><h3>바렛 M82</h3><p>무한 탄창</p></div>
+            <div class="card" onclick="startWithWeapon('Railgun', 500)"><h3>레일건</h3><p>무한 탄창</p></div>
+            <div class="card" onclick="startWithWeapon('RPG', 400)"><h3>RPG-7</h3><p>무한 탄창</p></div>
+        </div>
+    </div>
+</div>
+
+<div id="game-container">
+    <div id="background-layer"></div>
+    <div id="bg-overlay"></div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="crosshair"></div>
+    <div id="round-info">
+        <span id="round-num">ROUND 1 / 4</span>
+        <span id="cur-difficulty" style="color:#27ae60">난이도: 쉬움</span>
+    </div>
+    
+    <div id="slow-msg">포커스 모드</div>
+    <div id="skill-msg">궁극기 준비 완료</div>
+    <div id="round-msg"></div>
+    
+    <div id="weapon-view">
+        <div id="barrel" class="weapon-part"></div>
+        <div id="body" class="weapon-part"></div>
+    </div>
+    
+    <div class="game-info">
+        <div class="bar-container">플레이어 <div class="hp-bar-bg"><div id="p-hp-fill" class="hp-bar-fill" style="width:100%"></div></div></div>
+        <div class="bar-container" style="color:var(--primary)">보스 <div class="hp-bar-bg"><div id="e-hp-fill" class="hp-bar-fill"></div></div></div>
+        <div class="bar-container" style="color:var(--skill)">스킬 게이지 <div class="hp-bar-bg"><div id="skill-bar-fill" class="hp-bar-fill"></div></div></div>
+    </div>
+    
+    <div class="controls-hint">이동: A, D / 시점: W, S / 발사: K / 스킬: E</div>
+    
+    <div id="result-screen">
+        <div id="result-msg"></div>
+        <button class="btn" onclick="location.reload()">다시 도전하기</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas'); const ctx = canvas.getContext('2d');
+    const bgLayer = document.getElementById('background-layer');
+    const weaponView = document.getElementById('weapon-view');
+    let screenWidth, screenHeight; 
+    let weaponDamage = 10, currentWeapon = '', currentRound = 1;
+    let playerHp = 100, enemyHp = 1000, skillEnergy = 0, gameActive = false;
+    let camPitch = 0, playerX = 0, playerTargetX = 0, shake = 0, slowMotion = 1;
+    let keys = { a: false, d: false, w: false, s: false };
+    let enemy = { x: 0, y: 0, z: 450, size: 95, speed: 3, dir: 1, lastFire: 0, frozen: false };
+    let particles = [];
+    let animationTime = 0;
+
+    function resize() { screenWidth = canvas.width = window.innerWidth; screenHeight = canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+    
+    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+    function selectMap(name, img) { bgLayer.style.backgroundImage = `url('${img}')`; showScreen('weapon-screen'); }
+    
+    function startWithWeapon(name, dmg) { 
+        currentWeapon = name; weaponDamage = dmg; 
+        if(name === 'RPG') { document.getElementById('barrel').style.width = '80px'; document.getElementById('barrel').style.left = '160px'; }
+        startGame(); 
+    }
+    
+    function startGame() { 
+        document.getElementById('ui-layer').style.display = 'none'; 
+        document.getElementById('game-container').style.display = 'block'; 
+        currentRound = 1;
+        initRound();
+        gameActive = true; 
+        animate(); 
+    }
+
+    function initRound() {
+        let diffLabel = ""; let diffColor = ""; let currentMaxHp = 1000;
+        if (currentRound === 1) { currentMaxHp = 1000; enemy.speed = 3.0; diffLabel = "난이도: 쉬움"; diffColor = "#27ae60"; } 
+        else if (currentRound === 2) { currentMaxHp = 2000; enemy.speed = 3.8; diffLabel = "난이도: 보통"; diffColor = "#2980b9"; } 
+        else if (currentRound === 3) { currentMaxHp = 3500; enemy.speed = 4.5; diffLabel = "난이도: 어려움"; diffColor = "#c0392b"; } 
+        else if (currentRound === 4) { currentMaxHp = 4000; enemy.speed = 5.8; diffLabel = "난이도: 크레이지"; diffColor = "#9b59b6"; }
+        enemyHp = currentMaxHp;
+        document.getElementById('round-num').innerText = `ROUND ${currentRound} / 4`;
+        const diffSpan = document.getElementById('cur-difficulty');
+        diffSpan.innerText = diffLabel; diffSpan.style.color = diffColor;
+        const roundMsg = document.getElementById('round-msg');
+        roundMsg.innerText = `ROUND ${currentRound}\n[${diffLabel}]`;
+        roundMsg.style.color = diffColor; roundMsg.style.display = 'block';
+        setTimeout(() => roundMsg.style.display = 'none', 2000);
+        updateBars();
+    }
+
+    window.addEventListener('keydown', e => {
+        const k = e.key.toLowerCase(); 
+        if (k === 'a' || e.key === 'ArrowLeft') keys.a = true; if (k === 'd' || e.key === 'ArrowRight') keys.d = true;
+        if (k === 'w' || e.key === 'ArrowUp') keys.up = true; if (k === 's' || e.key === 'ArrowDown') keys.s = true;
+        if (k === 'k') fire();
+        if (k === 'e') useSkill();
+    });
+    window.addEventListener('keyup', e => {
+        const k = e.key.toLowerCase(); 
+        if (k === 'a' || e.key === 'ArrowLeft') keys.a = false; if (k === 'd' || e.key === 'ArrowRight') keys.d = false;
+        if (k === 'w' || e.key === 'ArrowUp') keys.up = false; if (k === 's' || e.key === 'ArrowDown') keys.s = false;
+    });
+
+    let lastFireTime = 0;
+    function fire() {
+        if (!gameActive) return;
+        let now = Date.now();
+        let fireDelay = (currentWeapon === 'RPG' || currentWeapon === 'Barrett') ? 500 : 100;
+        if (now - lastFireTime < fireDelay) return;
+        lastFireTime = now;
+        shake = 15;
+        let scale = 400 / enemy.z; let relX = enemy.x - playerX;
+        let drawX = screenWidth / 2 + relX * scale; 
+        if (Math.abs(camPitch) < 40 && Math.abs(screenWidth/2 - drawX) < (enemy.size * scale)/2.5) {
+            enemyHp -= weaponDamage;
+            skillEnergy = Math.min(100, skillEnergy + 8); 
+            updateBars();
+            for(let i=0; i<10; i++) particles.push({x:drawX, y:screenHeight/2-camPitch+50*scale, vx:(Math.random()-0.5)*15, vy:(Math.random()-0.5)*15, life:1, color:"#f00"});
+            if (enemyHp <= 0) { 
+                enemyHp = 0; 
+                if(currentRound < 4) { currentRound++; initRound(); } else endGame(true); 
+            }
+        }
+    }
+
+    function useSkill() {
+        if (skillEnergy < 100 || !gameActive) return;
+        skillEnergy = 0; updateBars();
+        shake = 70;
+        document.getElementById('skill-msg').innerText = "궁극기 발동!";
+        document.getElementById('skill-msg').style.display = 'block';
+        setTimeout(() => document.getElementById('skill-msg').style.display = 'none', 1000);
+        if (currentWeapon === 'Glock') { for(let i=0; i<15; i++) setTimeout(fire, i*70); } 
+        else if (currentWeapon === 'AK47') { enemyHp -= 250; for(let i=0; i<50; i++) particles.push({x:screenWidth/2, y:screenHeight/2, vx:(Math.random()-0.5)*30, vy:(Math.random()-0.5)*30, life:1.5, color:"#f39c12"}); } 
+        else if (currentWeapon === 'M870') { enemy.frozen = true; setTimeout(() => enemy.frozen = false, 4000); } 
+        else if (currentWeapon === 'M249') { let oldDmg = weaponDamage; weaponDamage *= 3; setTimeout(() => weaponDamage = oldDmg, 6000); } 
+        else if (currentWeapon === 'Barrett') { slowMotion = 0.05; setTimeout(() => slowMotion = 1, 5000); } 
+        else if (currentWeapon === 'Railgun' || currentWeapon === 'RPG') { enemyHp -= 1000; }
+        if (enemyHp <= 0) { 
+            enemyHp = 0; 
+            if(currentRound < 4) { currentRound++; initRound(); } else endGame(true); 
+        }
+        updateBars();
+    }
+
+    function updateBars() {
+        document.getElementById('p-hp-fill').style.width = playerHp + '%';
+        let curMax = (currentRound === 1) ? 1000 : (currentRound === 2 ? 2000 : (currentRound === 3 ? 3500 : 4000));
+        document.getElementById('e-hp-fill').style.width = (enemyHp / curMax * 100) + '%';
+        document.getElementById('skill-bar-fill').style.width = skillEnergy + '%';
+        if(skillEnergy >= 100) document.getElementById('skill-msg').style.display = 'block';
+    }
+
+    function endGame(win) {
+        gameActive = false;
+        const screen = document.getElementById('result-screen');
+        const msg = document.getElementById('result-msg');
+        screen.style.display = 'flex';
+        msg.innerText = win ? "최종 승리!\n전설의 탄생입니다." : "임무 실패...\n신의 영역은 멀었습니다.";
+        msg.style.color = win ? "#f1c40f" : "#e74c3c";
+    }
+
+    function update() {
+        if (!gameActive) return;
+        animationTime += 0.05;
+        let sm = slowMotion;
+        if (keys.a) playerTargetX -= 15; if (keys.d) playerTargetX += 15;
+        playerTargetX = Math.max(-420, Math.min(420, playerTargetX));
+        playerX += (playerTargetX - playerX) * 0.15;
+        bgLayer.style.transform = `translate(${-playerX * 0.25}px, ${camPitch * 0.5}px)`;
+        weaponView.style.transform = `translateX(${-(playerX - playerTargetX)*0.6}px) translateY(${shake}px)`;
+        if (keys.up) camPitch -= 3; if (keys.down) camPitch += 3;
+        camPitch = Math.max(-80, Math.min(80, camPitch));
+
+        if (!enemy.frozen) {
+            enemy.x += enemy.speed * enemy.dir * sm;
+            if (Math.abs(enemy.x) > 280) enemy.dir *= -1;
+        }
+
+        let diffX = Math.abs(enemy.x - playerX);
+        if (diffX < 70) { enemy.state = 'targeting'; } else enemy.state = 'idle';
+
+        let baseDamage = (currentRound === 1) ? 12 : (currentRound === 2 ? 18 : (currentRound === 3 ? 25 : 35));
+        if (!enemy.frozen && Date.now() - enemy.lastFire > (1300 / sm) && diffX < 40) {
+            playerHp -= baseDamage; enemy.lastFire = Date.now(); shake = 40;
+            document.body.style.backgroundColor = "rgba(255,0,0,0.6)"; setTimeout(() => { document.body.style.backgroundColor = "black"; }, 50);
+            if (playerHp <= 0) { playerHp = 0; updateBars(); endGame(false); }
+            updateBars();
+        }
+        particles.forEach((p, i) => { p.x += p.vx; p.y += p.vy; p.life -= 0.03; if(p.life <= 0) particles.splice(i, 1); });
+        if(shake > 0) shake *= 0.85;
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.save();
+        ctx.translate((Math.random()-0.5)*shake, (Math.random()-0.5)*shake - camPitch);
+        
+        ctx.strokeStyle = "rgba(255,255,255,0.15)";
+        ctx.lineWidth = 2;
+        for(let i=-20; i<=20; i++) {
+            let lineX = screenWidth/2 + (i*150 - playerX);
+            ctx.beginPath(); ctx.moveTo(lineX, screenHeight/2); ctx.lineTo(screenWidth/2 + (i*1200 - playerX*5.5), screenHeight); ctx.stroke();
+        }
+
+        if (enemyHp > 0) {
+            let scale = 400 / enemy.z;
+            let drawX = screenWidth/2 + (enemy.x - playerX) * scale;
+            let drawY = screenHeight/2 + 100 * scale;
+            let size = enemy.size * scale;
+            let auraRadius = size * 2.2 + Math.sin(animationTime * 2.5) * 35;
+            let hue = (currentRound === 1) ? 120 : (currentRound === 2 ? 200 : (currentRound === 3 ? 0 : 280)); 
+            let gradient = ctx.createRadialGradient(drawX, drawY - size/2, size/3, drawX, drawY - size/2, auraRadius);
+            if (currentRound === 4) { 
+                gradient.addColorStop(0, `hsla(${(animationTime*100)%360}, 100%, 50%, 0.8)`);
+                gradient.addColorStop(1, "rgba(0,0,0,0)");
+            } else {
+                gradient.addColorStop(0, `hsla(${hue}, 100%, 60%, 0.7)`);
+                gradient.addColorStop(1, "rgba(0,0,0,0)");
+            }
+            ctx.fillStyle = gradient; ctx.beginPath(); ctx.arc(drawX, drawY - size/2, auraRadius, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = enemy.state === 'targeting' ? "#f00" : (enemy.frozen ? "#00ffff" : "#111");
+            ctx.beginPath(); ctx.arc(drawX, drawY - size*0.9, size/3.5, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = "#000"; ctx.fillRect(drawX - size/3, drawY - size*0.8, size/1.5, size*0.8);
+            ctx.fillStyle = "#fff"; ctx.fillRect(drawX - size/8, drawY - size*0.95, size/4, 2);
+            ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(drawX - 70, drawY - size - 40, 140, 12); 
+            ctx.fillStyle = "#e74c3c"; 
+            let curMax = (currentRound === 1) ? 1000 : (currentRound === 2 ? 2000 : (currentRound === 3 ? 3500 : 4000));
+            ctx.fillRect(drawX - 70, drawY - size - 40, 140 * (enemyHp/curMax), 10);
+        }
+        particles.forEach(p => { ctx.globalAlpha = p.life; ctx.fillStyle = p.color || "#f00"; ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI*2); ctx.fill(); });
+        ctx.restore();
+    }
+    function animate() { update(); draw(); if (gameActive) requestAnimationFrame(animate); }
+</script>
 </body>
 </html>
